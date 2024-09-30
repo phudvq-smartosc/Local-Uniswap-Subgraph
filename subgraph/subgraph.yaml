@@ -1,0 +1,66 @@
+specVersion: 0.0.4
+description: Uniswap local blockchain
+repository: https://github.com/graphprotocol/example-subgraph
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: ZuniswapV2Factory
+    network: mainnet
+    source:
+# NOTE: Change to new contract address whenever deploy 
+      address: '0x0165878A594ca255338adfa4d48449f69242Eb8F'
+      abi: ZuniswapV2Factory
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - ZuniswapV2Pair
+        - Token
+      abis:
+        - name: ZuniswapV2Factory
+          file: ./abis/ZuniswapV2Factory.sol/ZuniswapV2Factory.json
+        - name: ERC20Mintable
+          file: ./abis/ERC20Mintable.sol/ERC20Mintable.json
+        - name: ERC20SymbolBytes
+          file: ./abis/ERC20SymbolBytes.sol/ERC20SymbolBytes.json
+        - name: ERC20NameBytes
+          file: ./abis/ERC20NameBytes.sol/ERC20NameBytes.json
+
+      eventHandlers:
+        - event: PairCreated(indexed address,indexed address,address,uint256)
+          handler: handlePairCreated
+      file: ./src/mappings/factory.ts
+templates: 
+  - kind: ethereum/contract
+    name: ZuniswapV2Pair
+    network: mainnet  
+
+    source:
+      abi: ZuniswapV2Pair
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      file: ./src/mappings/core.ts
+      entities:
+        - ZuniswapV2Pair
+        - Token
+      abis:
+        - name: ZuniswapV2Pair
+          file: ./abis/ZuniswapV2Pair.sol/ZuniswapV2Pair.json
+        - name: ZuniswapV2Factory
+          file: ./abis/ZuniswapV2Factory.sol/ZuniswapV2Factory.json
+      eventHandlers:
+        - event: Mint(indexed address,uint256,uint256)
+          handler: handleMint
+        - event: Burn(indexed address,uint256,uint256,address)
+          handler: handleBurn
+        - event: Swap(indexed address,uint256,uint256,uint256,uint256,indexed address)
+          handler: handleSwap
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+        - event: Sync(uint256,uint256)
+          handler: handleSync
+

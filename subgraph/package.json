@@ -1,0 +1,20 @@
+{
+  "name": "subgraph",
+  "version": "1.0.0",
+  "description": "",
+  "main": ".eslintrc.js",
+  "scripts": {
+    "codegen": "graph codegen",
+    "build": "graph build",
+    "create-local": "graph create indexer/example --node http://127.0.0.1:8020",
+    "remove-local": "graph remove indexer/example --node http://127.0.0.1:8020",
+    "deploy-local": "graph deploy indexer/example --ipfs http://localhost:5001 --node http://127.0.0.1:8020"
+  },
+  "keywords": [],
+  "author":"Phu",
+  "license": "ISC",
+  "dependencies": {
+    "@graphprotocol/graph-cli": "^0.84.0",
+    "@graphprotocol/graph-ts": "^0.35.1"
+  }
+}
